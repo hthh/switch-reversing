@@ -870,8 +870,8 @@ def dump_ipc_filename(fname):
     print '#', fname
     #if fname.endswith(('.id0', '.id1', '.nam'))
     with open(fname, 'rb') as fileobj:
-        if fileobj.read(4) not in ('NSO0', 'KIP1'):
-            return
+        #if fileobj.read(4) not in ('NSO0', 'KIP1'):
+        #    return
         fileobj.seek(0)
         f = nxo64.load_nxo(fileobj)
 
