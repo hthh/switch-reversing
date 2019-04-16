@@ -157,7 +157,7 @@ class Simulator(object):
     def check_bl_for_malloc(self, uc):
         self.bl_count += 1
         if self.verbose:
-            print 'BL COUNT ', self.bl_count
+            print 'BL COUNT ', self.bl_count, uc.reg_read(UC_ARM64_REG_X0), uc.reg_read(UC_ARM64_REG_X1)
         if self.bl_count == 2 and uc.reg_read(UC_ARM64_REG_X0) in (0x20, 0x30, 0x38):
             #print 'MATCHED MALLOC'
             size = uc.reg_read(UC_ARM64_REG_X0)
@@ -165,7 +165,7 @@ class Simulator(object):
             self.heap_ptr += (size + 0xF) & ~0xF
             uc.reg_write(UC_ARM64_REG_X0, out)
             uc.reg_write(UC_ARM64_REG_PC, uc.reg_read(UC_ARM64_REG_PC) + 4)
-        elif self.bl_count == 4 and uc.reg_read(UC_ARM64_REG_X1) in (0x20, 0x30, 0x38) and uc.reg_read(UC_ARM64_REG_X0) == 0:
+        elif self.bl_count == 4 and uc.reg_read(UC_ARM64_REG_X1) in (0x20, 0x30, 0x38) and uc.reg_read(UC_ARM64_REG_X0) in (0, 0x200004000):
             #print 'MATCHED AllocateFromExpHeap'
             size = uc.reg_read(UC_ARM64_REG_X1)
             out = self.heap_ptr
@@ -232,7 +232,7 @@ class Simulator(object):
         try:
             self.uc.emu_start(self.loadbase + func, 0)
         except UcError as e:
-            print 'TODO: UcError: ', e
+            print 'TODO: UcError (around 0x%X): %s' %  (self.uc.reg_read(UC_ARM64_REG_PC), e)
 
     def call(self, func, arg0):
         assert self.current_run is None
@@ -287,10 +287,14 @@ def sim_filename(fname):
             print
             print vtable.interface
             print '=' * len(vtable.interface)
+        else:
+            pass
+            print vtable.interface
         
         hash_code = ''
         prior_rets = {}
         for entry in vtable.entries:
+            #print '%r (%x)' % (entry.cmd, 0x7100000000+ entry.funcptr)
             if entry.cmd is None: continue
 
             run_data = sim.call(entry.funcptr, sim.mem)
@@ -365,7 +369,7 @@ def sim_filename(fname):
                     parts.append('~%s bytes in' % pretty_hex(in_size))
 
             if entry.cmd != struct.unpack_from('<Q', data, data.index('SFCI') + 8)[0]:
-                print 'bad', entry.cmd, struct.unpack_from('<Q', data, data.index('SFCI') + 8)[0]
+                print 'bad', entry.cmd, struct.unpack_from('<Q', data, data.index('SFCI') + 8)[0], hex(entry.funcptr)
                 entry.cmd = struct.unpack_from('<Q', data, data.index('SFCI') + 8)[0]
 
             out_obj = struct.unpack('<Q', sim.uc.mem_read(sim.heap, 8))[0]
@@ -376,6 +380,8 @@ def sim_filename(fname):
                 rtti = sim.qword(out_obj-8)
                 if rtti > sim.loadbase:
                     name = sim.read(sim.qword(rtti+8), 512)
+                    while '\0' not in name:
+                        name += sim.read(sim.qword(rtti+8) + len(name), 512)
                     name = name[:name.index('\0')]
 
                     out_obj_name = demangle(name)

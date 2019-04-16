@@ -99,6 +99,7 @@ def get_last_immediate_argument(insns):
 
 	stores = {}
 	for i in insns:
+		#print ':', i.mnemonic, i.op_str
 		if i.mnemonic == 'orr' and i.op_str.split(', ')[1] == 'wzr':
 			immregs[int(i.op_str.split(', ')[0][1:])] = i.operands[2].value.imm
 		elif i.mnemonic == 'mov':
@@ -116,7 +117,10 @@ def get_last_immediate_argument(insns):
 			else:
 				immregs[int(i.op_str.split(', ')[0][1:])] = i.operands[1].value.imm
 		elif i.mnemonic == 'movk':
-			immregs[int(i.op_str.split(', ')[0][1:])] |= i.operands[1].value.imm
+			if i.op_str.endswith(', lsl #16'):
+				immregs[int(i.op_str.split(', ')[0][1:])] |= i.operands[1].value.imm << 16
+			else:
+				immregs[int(i.op_str.split(', ')[0][1:])] |= i.operands[1].value.imm
 		elif i.mnemonic == 'str' and i.reg_name(i.operands[1].value.mem.base) == 'sp':
 			reg = i.reg_name(i.operands[0].value.mem.base)
 			if reg == 'wzr':
@@ -277,6 +281,12 @@ def get_function_cmd_id(binstring, func_start, plt_lookup, rostart, roend):
 		if i in block_starts:
 			blocks.append([])
 		blocks[-1].append(insn)
+
+	#if True:
+	#	for b in blocks:
+	#		print '='
+	#		for i in b:
+	#			print i.mnemonic + ' ' + i.op_str #for i in b]
 
 	argsblock = None
 	for block in blocks[::-1]:
