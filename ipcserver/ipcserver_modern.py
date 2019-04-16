@@ -718,7 +718,7 @@ def get_interface_msg(intf_name):
 def get_vt_size(traces):
     if len(traces) == 0:
         return 0
-    return max(len(traces), (max(t.description['vt'] for t in traces) + 8 - 0x20)/8)
+    return max(len(traces), (max(t.description['vt'] for t in traces if 'vt' in t.description) + 8 - 0x20)/8)
 def try_match(trace_set, ipc_infos):
     ipcset = {}
     found = []
