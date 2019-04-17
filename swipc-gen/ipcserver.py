@@ -308,7 +308,7 @@ class IPCServerSimulator(Nx64Simulator):
             return trace
 
         # Pass buffer size checks
-        buffer_sizes = [128, 33]
+        buffer_sizes = [128, 33, 1]
         for buffer_size in buffer_sizes:
             trace = self.try_trace_cmd(dispatch_func, cmd_id, struct.pack('<QQQQ', 0, 0, 0, 0), buffer_size=buffer_size)
             if trace.is_correct():
