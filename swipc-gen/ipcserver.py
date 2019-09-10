@@ -513,6 +513,10 @@ class BranchTracer(object):
             if spoiled in self.taints:
                 self.taints.remove(spoiled)
                 del self.taint_offsets[spoiled]
+        if instruction.mnemonic == 'ldrh' and instruction.op_str.endswith(', lsl #1]') and int(parts[2][1:]) in self.taints:
+            self.range_top = min(self.range_top, self.cmd_id) # TODO
+        if instruction.mnemonic == 'ldrb' and int(parts[2][1:]) in self.taints:
+            self.range_top = min(self.range_top, self.cmd_id) # TODO
 
         if instruction.mnemonic == 'and' and parts[0].startswith(('w', 'x')) and int(parts[0][1:]) in self.taints:
             spoiled = int(parts[0][1:])
