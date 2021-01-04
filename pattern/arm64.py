@@ -3254,38 +3254,38 @@ def decode_asimdext(d):
     if (d & 0xbfe08400) == 0x2e000000: return ('EXT_asimdext_only', {'Q': Q, 'Rd': Rd, 'Rm': Rm, 'Rn': Rn, 'imm4': imm4})
     return decode_UNDEFINED(d)
 
-def decode_asimdimm(d):
-    assert (d & 0x9ff80400) == 0x0f000400
-    Q      = (d >> 30) & 1
-    Rd     = (d >> 0) & 0x1F
-    a      = (d >> 18) & 1
-    b      = (d >> 17) & 1
-    c      = (d >> 16) & 1
-    cmode  = (d >> 12) & 0xF
-    d      = (d >> 9) & 1
-    e      = (d >> 8) & 1
-    f      = (d >> 7) & 1
-    g      = (d >> 6) & 1
-    h      = (d >> 5) & 1
-    o2     = (d >> 11) & 1
-    op     = (d >> 29) & 1
-    if (d & 0xfff8fc00) == 0x2f00e400: return ('MOVI_asimdimm_D_ds', {'Rd': Rd, 'a': a, 'b': b, 'c': c, 'd': d, 'e': e, 'f': f, 'g': g, 'h': h})
-    if (d & 0xfff8fc00) == 0x6f00e400: return ('MOVI_asimdimm_D2_d', {'Rd': Rd, 'a': a, 'b': b, 'c': c, 'd': d, 'e': e, 'f': f, 'g': g, 'h': h})
-    if (d & 0xfff8fc00) == 0x6f00f400: return ('FMOV_asimdimm_D2_d', {'Rd': Rd, 'a': a, 'b': b, 'c': c, 'd': d, 'e': e, 'f': f, 'g': g, 'h': h})
-    if (d & 0xbff8fc00) == 0x0f00e400: return ('MOVI_asimdimm_N_b', {'Q': Q, 'Rd': Rd, 'a': a, 'b': b, 'c': c, 'd': d, 'e': e, 'f': f, 'g': g, 'h': h})
-    if (d & 0xbff8fc00) == 0x0f00f400: return ('FMOV_asimdimm_S_s', {'Q': Q, 'Rd': Rd, 'a': a, 'b': b, 'c': c, 'd': d, 'e': e, 'f': f, 'g': g, 'h': h})
-    if (d & 0xbff8fc00) == 0x0f00fc00: return ('FMOV_asimdimm_H_h', {'Q': Q, 'Rd': Rd, 'a': a, 'b': b, 'c': c, 'd': d, 'e': e, 'f': f, 'g': g, 'h': h})
-    if (d & 0xbff8dc00) == 0x0f008400: return ('MOVI_asimdimm_L_hl', {'Q': Q, 'Rd': Rd, 'a': a, 'b': b, 'c': c, 'cmode': cmode, 'd': d, 'e': e, 'f': f, 'g': g, 'h': h})
-    if (d & 0xbff8dc00) == 0x0f009400: return ('ORR_asimdimm_L_hl', {'Q': Q, 'Rd': Rd, 'a': a, 'b': b, 'c': c, 'cmode': cmode, 'd': d, 'e': e, 'f': f, 'g': g, 'h': h})
-    if (d & 0xbff8dc00) == 0x2f008400: return ('MVNI_asimdimm_L_hl', {'Q': Q, 'Rd': Rd, 'a': a, 'b': b, 'c': c, 'cmode': cmode, 'd': d, 'e': e, 'f': f, 'g': g, 'h': h})
-    if (d & 0xbff8dc00) == 0x2f009400: return ('BIC_asimdimm_L_hl', {'Q': Q, 'Rd': Rd, 'a': a, 'b': b, 'c': c, 'cmode': cmode, 'd': d, 'e': e, 'f': f, 'g': g, 'h': h})
-    if (d & 0xbff8ec00) == 0x0f00c400: return ('MOVI_asimdimm_M_sm', {'Q': Q, 'Rd': Rd, 'a': a, 'b': b, 'c': c, 'cmode': cmode, 'd': d, 'e': e, 'f': f, 'g': g, 'h': h})
-    if (d & 0xbff8ec00) == 0x2f00c400: return ('MVNI_asimdimm_M_sm', {'Q': Q, 'Rd': Rd, 'a': a, 'b': b, 'c': c, 'cmode': cmode, 'd': d, 'e': e, 'f': f, 'g': g, 'h': h})
-    if (d & 0xbff89c00) == 0x0f000400: return ('MOVI_asimdimm_L_sl', {'Q': Q, 'Rd': Rd, 'a': a, 'b': b, 'c': c, 'cmode': cmode, 'd': d, 'e': e, 'f': f, 'g': g, 'h': h})
-    if (d & 0xbff89c00) == 0x0f001400: return ('ORR_asimdimm_L_sl', {'Q': Q, 'Rd': Rd, 'a': a, 'b': b, 'c': c, 'cmode': cmode, 'd': d, 'e': e, 'f': f, 'g': g, 'h': h})
-    if (d & 0xbff89c00) == 0x2f000400: return ('MVNI_asimdimm_L_sl', {'Q': Q, 'Rd': Rd, 'a': a, 'b': b, 'c': c, 'cmode': cmode, 'd': d, 'e': e, 'f': f, 'g': g, 'h': h})
-    if (d & 0xbff89c00) == 0x2f001400: return ('BIC_asimdimm_L_sl', {'Q': Q, 'Rd': Rd, 'a': a, 'b': b, 'c': c, 'cmode': cmode, 'd': d, 'e': e, 'f': f, 'g': g, 'h': h})
-    return decode_UNDEFINED(d)
+def decode_asimdimm(v):
+    assert (v & 0x9ff80400) == 0x0f000400
+    Q      = (v >> 30) & 1
+    Rd     = (v >> 0) & 0x1F
+    a      = (v >> 18) & 1
+    b      = (v >> 17) & 1
+    c      = (v >> 16) & 1
+    cmode  = (v >> 12) & 0xF
+    d      = (v >> 9) & 1
+    e      = (v >> 8) & 1
+    f      = (v >> 7) & 1
+    g      = (v >> 6) & 1
+    h      = (v >> 5) & 1
+    o2     = (v >> 11) & 1
+    op     = (v >> 29) & 1
+    if (v & 0xfff8fc00) == 0x2f00e400: return ('MOVI_asimdimm_D_ds', {'Rd': Rd, 'a': a, 'b': b, 'c': c, 'd': d, 'e': e, 'f': f, 'g': g, 'h': h})
+    if (v & 0xfff8fc00) == 0x6f00e400: return ('MOVI_asimdimm_D2_d', {'Rd': Rd, 'a': a, 'b': b, 'c': c, 'd': d, 'e': e, 'f': f, 'g': g, 'h': h})
+    if (v & 0xfff8fc00) == 0x6f00f400: return ('FMOV_asimdimm_D2_d', {'Rd': Rd, 'a': a, 'b': b, 'c': c, 'd': d, 'e': e, 'f': f, 'g': g, 'h': h})
+    if (v & 0xbff8fc00) == 0x0f00e400: return ('MOVI_asimdimm_N_b', {'Q': Q, 'Rd': Rd, 'a': a, 'b': b, 'c': c, 'd': d, 'e': e, 'f': f, 'g': g, 'h': h})
+    if (v & 0xbff8fc00) == 0x0f00f400: return ('FMOV_asimdimm_S_s', {'Q': Q, 'Rd': Rd, 'a': a, 'b': b, 'c': c, 'd': d, 'e': e, 'f': f, 'g': g, 'h': h})
+    if (v & 0xbff8fc00) == 0x0f00fc00: return ('FMOV_asimdimm_H_h', {'Q': Q, 'Rd': Rd, 'a': a, 'b': b, 'c': c, 'd': d, 'e': e, 'f': f, 'g': g, 'h': h})
+    if (v & 0xbff8dc00) == 0x0f008400: return ('MOVI_asimdimm_L_hl', {'Q': Q, 'Rd': Rd, 'a': a, 'b': b, 'c': c, 'cmode': cmode, 'd': d, 'e': e, 'f': f, 'g': g, 'h': h})
+    if (v & 0xbff8dc00) == 0x0f009400: return ('ORR_asimdimm_L_hl', {'Q': Q, 'Rd': Rd, 'a': a, 'b': b, 'c': c, 'cmode': cmode, 'd': d, 'e': e, 'f': f, 'g': g, 'h': h})
+    if (v & 0xbff8dc00) == 0x2f008400: return ('MVNI_asimdimm_L_hl', {'Q': Q, 'Rd': Rd, 'a': a, 'b': b, 'c': c, 'cmode': cmode, 'd': d, 'e': e, 'f': f, 'g': g, 'h': h})
+    if (v & 0xbff8dc00) == 0x2f009400: return ('BIC_asimdimm_L_hl', {'Q': Q, 'Rd': Rd, 'a': a, 'b': b, 'c': c, 'cmode': cmode, 'd': d, 'e': e, 'f': f, 'g': g, 'h': h})
+    if (v & 0xbff8ec00) == 0x0f00c400: return ('MOVI_asimdimm_M_sm', {'Q': Q, 'Rd': Rd, 'a': a, 'b': b, 'c': c, 'cmode': cmode, 'd': d, 'e': e, 'f': f, 'g': g, 'h': h})
+    if (v & 0xbff8ec00) == 0x2f00c400: return ('MVNI_asimdimm_M_sm', {'Q': Q, 'Rd': Rd, 'a': a, 'b': b, 'c': c, 'cmode': cmode, 'd': d, 'e': e, 'f': f, 'g': g, 'h': h})
+    if (v & 0xbff89c00) == 0x0f000400: return ('MOVI_asimdimm_L_sl', {'Q': Q, 'Rd': Rd, 'a': a, 'b': b, 'c': c, 'cmode': cmode, 'd': d, 'e': e, 'f': f, 'g': g, 'h': h})
+    if (v & 0xbff89c00) == 0x0f001400: return ('ORR_asimdimm_L_sl', {'Q': Q, 'Rd': Rd, 'a': a, 'b': b, 'c': c, 'cmode': cmode, 'd': d, 'e': e, 'f': f, 'g': g, 'h': h})
+    if (v & 0xbff89c00) == 0x2f000400: return ('MVNI_asimdimm_L_sl', {'Q': Q, 'Rd': Rd, 'a': a, 'b': b, 'c': c, 'cmode': cmode, 'd': d, 'e': e, 'f': f, 'g': g, 'h': h})
+    if (v & 0xbff89c00) == 0x2f001400: return ('BIC_asimdimm_L_sl', {'Q': Q, 'Rd': Rd, 'a': a, 'b': b, 'c': c, 'cmode': cmode, 'd': d, 'e': e, 'f': f, 'g': g, 'h': h})
+    return decode_UNDEFINED(v)
 
 def decode_asimdperm(d):
     assert (d & 0xbf208c00) == 0x0e000800
